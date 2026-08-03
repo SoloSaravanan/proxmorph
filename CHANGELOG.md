@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.2] - 2026-08-03
+
+### Fixed
+- **All themes except the UniFi family** — Expanding a nav section in an LXC or VM (Firewall, and any other section with children) no longer makes its subsections invisible. The selected item's on-accent text color was set with a descendant selector, `.x-treelist-item-selected .x-treelist-item-text`, but ExtJS nests child items inside the selected `<li>`, so children were painted the same dark color as the panel background. Scoped to the item's own row, `.x-treelist-item-selected > .x-treelist-row .x-treelist-item-text`. Affects LXC and VM alike. Issue [#54](https://github.com/IT-BAER/proxmorph/issues/54)
+
 ## [2.8.1] - 2026-07-19
 
 ### Added
