@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+<!-- Installer-only: install.sh is fetched from main, and the themes come from the v2.8.2
+     release, which is already correct. No version bump or new release needed. -->
+
+- **`install` reinstalled stale themes.** `bash <(curl ... install.sh) install`, the README one-liner, runs from process substitution, so the installer could not see a `themes/` directory next to itself and fell back to the cached copy in `/opt/proxmorph/themes` left by the previously installed version. On a machine that already had ProxMorph, that reinstalled the old CSS: the 2.8.2 nav-subsection fix ([#54](https://github.com/IT-BAER/proxmorph/issues/54)) and the UniFi OLED theme added in 2.8.0 never reached anyone who updated with `install` instead of `update`. `install` now fetches the release when there are no local theme files.
+- **Reported version could not be trusted.** The installer stamped `/opt/proxmorph/.version` with the version of the script being run rather than the version of the themes it copied, so `status` showed `v2.8.2` on a host still running 2.7-era CSS. It now keeps the version recorded by the download and only labels installs made from a local checkout.
+
 ## [2.8.2] - 2026-08-03
 
 ### Fixed

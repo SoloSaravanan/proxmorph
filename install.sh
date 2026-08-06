@@ -1584,6 +1584,29 @@ get_themes_source() {
     return 1
 }
 
+# Record what was actually installed. Themes copied from the ${INSTALL_DIR} cache
+# carry the version download_release() already wrote there; stamping $VERSION over
+# it would report the version of the *script* the user ran, which is how a stale
+# install can claim to be current. Only a local checkout is ours to label.
+record_version() { # $1 = themes source dir
+    [[ "$1" == "${INSTALL_DIR}/themes"* ]] || echo "$VERSION" > "${INSTALL_DIR}/.version"
+}
+
+# Install, fetching the release first when there is nothing local to install from.
+# Piped execution (`bash <(curl …/install.sh) install`) has no themes/ dir next to
+# the script, so get_themes_source() falls back to the ${INSTALL_DIR} cache left by
+# the previously installed version. Without this, `install` silently reinstalls
+# stale CSS instead of the version the user just fetched.
+install_latest() {
+    local src
+    src=$(get_themes_source)
+    if [[ -z "$src" || "$src" == "${INSTALL_DIR}/themes"* ]]; then
+        print_info "No local theme files, fetching the latest release..."
+        download_release
+    fi
+    install_themes
+}
+
 # Install all themes from themes directory
 install_themes() {
     print_info "Installing ProxMorph themes..."
@@ -1623,7 +1646,7 @@ install_themes() {
         
         install_pdm_themes "$themes_source"
         install_apt_hook
-        echo "$VERSION" > "${INSTALL_DIR}/.version"
+        record_version "$themes_source"
         
         echo ""
         print_status "ProxMorph PDM themes installed successfully!"
@@ -1700,7 +1723,7 @@ install_themes() {
     inject_default_theme
 
     # Write version file
-    echo "$VERSION" > "${INSTALL_DIR}/.version"
+    record_version "$themes_source"
     
     # Offer hardware sensor integration (PVE only)
     if [[ "$PRODUCT" == "PVE" ]]; then
@@ -1937,7 +1960,7 @@ show_menu() {
     read -p "Enter choice [0-8]: " choice
 
     case $choice in
-        1) install_themes ;;
+        1) install_latest ;;
         2) download_release && install_themes ;;
         3) reinstall_themes ;;
         4) uninstall_themes ;;
@@ -1962,7 +1985,7 @@ main() {
     
     case "${1:-}" in
         install)
-            install_themes
+            install_latest
             ;;
         update)
             download_release "${2:-}"
