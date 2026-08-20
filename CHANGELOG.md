@@ -8,11 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-<!-- Installer-only: install.sh is fetched from main, and the themes come from the v2.8.2
-     release, which is already correct. No version bump or new release needed. -->
+<!-- The installer entries below need no release: install.sh is fetched from main.
+     The PDM UniFi OLED fix is a theme change and reaches users only via a release. -->
 
+- **PDM UniFi OLED rendered as plain UniFi dark.** `themes/pdm/theme-unifi-oled.css` described the OLED palette in its header, but every `rgb(...)` declaration in it was identical to `themes/pdm/theme-unifi.css`, so picking `PM: Unifi Oled` changed nothing on screen. The OLED substitutions had been written as hex values while PDM keeps its operative palette in `rgb()`, so none of them landed on a color token. PDM now gets true-black base surfaces, a grayscale elevated ramp, and the `#1e85ff` accent. Reported and fixed by [@SnowyyCodes](https://github.com/SnowyyCodes) ([#55](https://github.com/IT-BAER/proxmorph/pull/55)).
 - **`install` reinstalled stale themes.** `bash <(curl ... install.sh) install`, the README one-liner, runs from process substitution, so the installer could not see a `themes/` directory next to itself and fell back to the cached copy in `/opt/proxmorph/themes` left by the previously installed version. On a machine that already had ProxMorph, that reinstalled the old CSS: the 2.8.2 nav-subsection fix ([#54](https://github.com/IT-BAER/proxmorph/issues/54)) and the UniFi OLED theme added in 2.8.0 never reached anyone who updated with `install` instead of `update`. `install` now fetches the release when there are no local theme files.
 - **Reported version could not be trusted.** The installer stamped `/opt/proxmorph/.version` with the version of the script being run rather than the version of the themes it copied, so `status` showed `v2.8.2` on a host still running 2.7-era CSS. It now keeps the version recorded by the download and only labels installs made from a local checkout.
+
+### Changed
+
+- **UniFi OLED themes are generated, not hand-edited.** `tools/gen-oled.sh` derives `themes/theme-unifi-oled.css` and `themes/pdm/theme-unifi-oled.css` from their UniFi bases through per-product substitution tables (`tools/oled-palette-pve.tsv`, `tools/oled-palette-pdm.tsv`); PVE/PBS and PDM need separate tables because PDM stores its palette in `rgb()` and PVE/PBS in hex. `bash tools/gen-oled.sh --check` and `bash test/oled_sync.test.sh` fail when a base changes without its OLED variant being regenerated, or when an OLED theme is a straight copy of its base. Developer tooling only; not shipped in the release archive.
 
 ## [2.8.2] - 2026-08-03
 

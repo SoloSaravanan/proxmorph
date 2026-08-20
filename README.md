@@ -163,6 +163,22 @@ Originals are backed up to `/root/.proxmorph-backup` before any file is modified
 
 Theme files must start with `/*!Display Name*/` - this sets the name in Proxmox's dropdown.
 
+### Generated themes
+
+The UniFi OLED themes are not edited by hand. They are derived from the UniFi
+bases by `tools/gen-oled.sh`, which applies a per-product substitution table
+(`tools/oled-palette-pve.tsv`, `tools/oled-palette-pdm.tsv`).
+
+```bash
+bash tools/gen-oled.sh          # rewrite the OLED stylesheets
+bash tools/gen-oled.sh --check  # fail if they are stale
+bash test/oled_sync.test.sh     # same check, plus regression guards
+```
+
+After changing `themes/theme-unifi.css` or `themes/pdm/theme-unifi.css`, re-run the
+generator and commit the result. PVE/PBS and PDM need separate tables because PDM
+stores its palette in `rgb()` while PVE/PBS uses hex.
+
 ## ❓ Troubleshooting
 
 ### Themes not appearing in Color Theme dropdown
