@@ -5,11 +5,9 @@ All notable changes to ProxMorph will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.8.3] - 2026-08-20
 
 ### Fixed
-<!-- The installer entries below need no release: install.sh is fetched from main.
-     The PDM UniFi OLED fix is a theme change and reaches users only via a release. -->
 
 - **PDM UniFi OLED rendered as plain UniFi dark.** `themes/pdm/theme-unifi-oled.css` described the OLED palette in its header, but every `rgb(...)` declaration in it was identical to `themes/pdm/theme-unifi.css`, so picking `PM: Unifi Oled` changed nothing on screen. The OLED substitutions had been written as hex values while PDM keeps its operative palette in `rgb()`, so none of them landed on a color token. PDM now gets true-black base surfaces, a grayscale elevated ramp, and the `#1e85ff` accent. Reported and fixed by [@SnowyyCodes](https://github.com/SnowyyCodes) ([#55](https://github.com/IT-BAER/proxmorph/pull/55)).
 - **`install` reinstalled stale themes.** `bash <(curl ... install.sh) install`, the README one-liner, runs from process substitution, so the installer could not see a `themes/` directory next to itself and fell back to the cached copy in `/opt/proxmorph/themes` left by the previously installed version. On a machine that already had ProxMorph, that reinstalled the old CSS: the 2.8.2 nav-subsection fix ([#54](https://github.com/IT-BAER/proxmorph/issues/54)) and the UniFi OLED theme added in 2.8.0 never reached anyone who updated with `install` instead of `update`. `install` now fetches the release when there are no local theme files.
