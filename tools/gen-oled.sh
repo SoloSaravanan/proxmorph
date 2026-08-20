@@ -19,15 +19,27 @@ TARGETS=(
     "themes/pdm/theme-unifi.css|themes/pdm/theme-unifi-oled.css|tools/oled-palette-pdm.tsv"
 )
 
-# generate BASE PALETTE OUT
-# Byte conventions of the base (CRLF on a Windows checkout, absent final newline)
-# are reproduced so regeneration never surfaces as a whole-file diff.
-generate() {
-    local base="$1" palette="$2" out="$3" provenance crlf=0
-    provenance=" * Generated from $(basename "$base") by tools/gen-oled.sh. Do not edit by hand; re-run the generator to re-sync."
-    if grep -q $'\r' "$base"; then crlf=1; fi
+# Byte-count comparison rather than grep: some grep builds (git-bash) strip CR
+# before matching and report a CRLF file as LF.
+has_crlf() {
+    [[ "$(wc -c < "$1")" -ne "$(tr -d '\r' < "$1" | wc -c)" ]]
+}
 
-    sed 's/\r$//' "$base" \
+ends_with_newline() {
+    [[ -s "$1" && "$(tail -c 1 "$1" | wc -l)" -ne 0 ]]
+}
+
+# generate BASE PALETTE OUT
+# The base's line endings and final-newline convention are reproduced, so a
+# checkout with either convention regenerates to a no-op diff.
+generate() {
+    local base="$1" palette="$2" out="$3" provenance crlf=0 trailing=1
+    provenance=" * Generated from $(basename "$base") by tools/gen-oled.sh. Do not edit by hand; re-run the generator to re-sync."
+    if has_crlf "$base"; then crlf=1; fi
+    if ! ends_with_newline "$base"; then trailing=0; fi
+
+    # awk emits LF and always terminates the last line; both are fixed up below.
+    tr -d '\r' < "$base" \
         | awk -v NAME="UniFi" -v PROVENANCE="$provenance" -f "$AWK_PROG" "$palette" - \
         > "${out}.lf"
 
@@ -38,9 +50,9 @@ generate() {
         mv "${out}.lf" "$out"
     fi
 
-    # awk always terminates the last line; match the base so the diff stays clean.
-    if [[ -s "$base" && "$(tail -c 1 "$base" | wc -l)" -eq 0 ]]; then
-        truncate -s -1 "$out"
+    # Drop the terminator awk added, sized to the convention just applied.
+    if (( ! trailing )); then
+        truncate -s "-$(( crlf ? 2 : 1 ))" "$out"
     fi
 }
 
