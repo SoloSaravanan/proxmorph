@@ -1599,7 +1599,7 @@ record_version() { # $1 = themes source dir
 # stale CSS instead of the version the user just fetched.
 install_latest() {
     local src
-    src=$(get_themes_source)
+    src=$(get_themes_source) || src=""
     if [[ -z "$src" || "$src" == "${INSTALL_DIR}/themes"* ]]; then
         print_info "No local theme files, fetching the latest release..."
         download_release
