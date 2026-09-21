@@ -82,6 +82,3 @@ sudo journalctl -u pveproxy -n 100 --no-pager
 - Proxmox Backup Server
 - Proxmox Datacenter Manager
 
-## License
-
-MIT
