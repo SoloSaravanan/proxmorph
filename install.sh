@@ -351,6 +351,11 @@ install_js_patches() {
     
     # Create JS patches directory
     mkdir -p "$JS_PATCHES_DIR"
+    if [[ "$PRODUCT" == "PDM" ]]; then
+        rm -f "$JS_PATCHES_DIR/pdm-theme-selector.js" "$JS_PATCHES_DIR/proxmorph-sensors.js"
+    else
+        rm -f "$JS_PATCHES_DIR/pdm-theme-selector.js"
+    fi
     
     # Copy JS files
     for js_file in "$patches_source"/*.js; do
