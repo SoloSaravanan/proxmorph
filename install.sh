@@ -355,6 +355,10 @@ install_js_patches() {
     # Copy JS files
     for js_file in "$patches_source"/*.js; do
         if [[ -f "$js_file" ]]; then
+            js_name=$(basename "$js_file")
+            if [[ "$PRODUCT" == "PDM" && "$js_name" != "pdm-theme-selector.js" ]] || [[ "$PRODUCT" != "PDM" && "$js_name" == "pdm-theme-selector.js" ]] || [[ "$js_name" == "proxmorph-sensors.js" && ! -f "$SENSORS_CONFIG" ]]; then
+                continue
+            fi
             cp "$js_file" "${JS_PATCHES_DIR}/"
             chmod 644 "${JS_PATCHES_DIR}/$(basename "$js_file")"
             print_theme "Installed: $(basename "$js_file")"
