@@ -12,12 +12,6 @@ A focused dark theme for Proxmox VE, based on the native Proxmox Dark theme with
 
 ## Installation
 
-### Online installer
-
-~~~bash
-bash <(curl -fsSL https://raw.githubusercontent.com/SoloSaravanan/proxmorph/main/install.sh) install
-~~~
-
 ### Manual installation
 
 ~~~bash
