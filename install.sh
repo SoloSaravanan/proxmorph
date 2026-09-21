@@ -1653,7 +1653,7 @@ install_themes() {
         echo ""
         print_info "To activate a theme:"
         print_info "  1. Open browser console (F12) on your PDM web UI"
-        print_info "  2. Run: localStorage.setItem('proxmorph-theme', 'theme-dracula.css')"
+        print_info "  2. Run: localStorage.setItem('proxmorph-theme', 'theme-proxmox-amoled.css')"
         print_info "  3. Reload the page (Ctrl+Shift+R)"
         print_info ""
         print_info "Available themes:"
