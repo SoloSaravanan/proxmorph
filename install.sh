@@ -20,7 +20,7 @@ WIDGET_TOOLKIT_DIR="/usr/share/javascript/proxmox-widget-toolkit"
 THEMES_DIR="${WIDGET_TOOLKIT_DIR}/themes"
 PROXMOXLIB_JS="${WIDGET_TOOLKIT_DIR}/proxmoxlib.js"
 BACKUP_DIR="/root/.proxmorph-backup"
-GITHUB_REPO="IT-BAER/proxmorph"
+GITHUB_REPO="SoloSaravanan/proxmorph"
 INSTALL_DIR="/opt/proxmorph"
 
 # Sensor support paths
