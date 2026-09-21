@@ -73,13 +73,13 @@ Comparison between default Proxmox Dark theme and UniFi theme:
 ### One-Liner Install
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/IT-BAER/proxmorph/main/install.sh) install
+bash <(curl -fsSL https://raw.githubusercontent.com/SoloSaravanan/proxmorph/main/install.sh) install
 ```
 
 ### Manual Install
 
 ```bash
-git clone https://github.com/IT-BAER/proxmorph.git
+git clone https://github.com/SoloSaravanan/proxmorph.git
 cd proxmorph
 chmod +x install.sh
 ./install.sh install
@@ -93,12 +93,12 @@ For stronger, provenance-level checks, verify a release **on your workstation** 
 
 ```bash
 # integrity: do the bytes match the published manifest?
-curl -fsSLO https://github.com/IT-BAER/proxmorph/releases/download/v<ver>/proxmorph-<ver>.tar.gz
-curl -fsSLO https://github.com/IT-BAER/proxmorph/releases/download/v<ver>/SHA256SUMS
+curl -fsSLO https://github.com/SoloSaravanan/proxmorph/releases/download/v<ver>/proxmorph-<ver>.tar.gz
+curl -fsSLO https://github.com/SoloSaravanan/proxmorph/releases/download/v<ver>/SHA256SUMS
 sha256sum -c SHA256SUMS --ignore-missing
 
 # provenance: was it built by this repo's release workflow?
-gh attestation verify proxmorph-<ver>.tar.gz --repo IT-BAER/proxmorph
+gh attestation verify proxmorph-<ver>.tar.gz --repo SoloSaravanan/proxmorph
 ```
 
 What each gives you: `SHA256SUMS` proves the bytes match what was published with the release (integrity). The attestation gives you a Sigstore/OIDC chain tying the artifact to this repository's Actions build, so you can check origin against something other than the transport. It is a check you opt into, not something the host enforces; neither replaces reading `install.sh` before running it as root. The [What the installer changes](#-what-the-installer-changes-on-your-system) section lists exactly what it touches.
@@ -106,7 +106,7 @@ What each gives you: `SHA256SUMS` proves the bytes match what was published with
 ### Install from a clone (review first)
 
 ```bash
-git clone https://github.com/IT-BAER/proxmorph.git
+git clone https://github.com/SoloSaravanan/proxmorph.git
 cd proxmorph
 git checkout v<ver>          # pin a release
 less install.sh              # read it
@@ -136,7 +136,7 @@ Checksum verification still runs, against your mirrored `SHA256SUMS`.
 |---------|-------------|
 | `./install.sh install` | Install themes |
 | `./install.sh uninstall` | Remove themes |
-| `./install.sh update` or `bash <(curl -fsSL https://raw.githubusercontent.com/IT-BAER/proxmorph/main/install.sh) update` | Updates (latest from GitHub) and install the latest themes |
+| `./install.sh update` or `bash <(curl -fsSL https://raw.githubusercontent.com/SoloSaravanan/proxmorph/main/install.sh) update` | Updates (latest from GitHub) and install the latest themes |
 | `./install.sh status` | Show installation status |
 | `./install.sh default-theme <key\|none>` | Set a server-side default theme for new browsers (user choice always wins) |
 | `./install.sh` | Shows Menu to manage|
@@ -201,7 +201,7 @@ If you access Proxmox through a **Cloudflare Tunnel**, themes may not load due t
 5. Set **Cache eligibility** to **Bypass cache**
 6. Save and deploy the rule
 
-See [Issue #13](https://github.com/IT-BAER/proxmorph/issues/13) for more details — thanks to [@gioxx](https://github.com/gioxx) for the solution!
+See [Issue #13](https://github.com/SoloSaravanan/proxmorph/issues/13) for more details — thanks to [@gioxx](https://github.com/gioxx) for the solution!
 
 ## ℹ️ How It Works
 
